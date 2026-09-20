@@ -1,0 +1,30 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Git GUI 프로그램 환경을 위한 dotnet PATH 명시적 추가
+export PATH=$PATH:/c/Program\ Files/dotnet:'/C/Program Files/dotnet':/usr/local/share/dotnet
+
+# dotnet 명령어가 실행 가능한지 재확인
+if ! command -v dotnet >/dev/null 2>&1; then
+    echo "[Warning] dotnet SDK 경로를 찾을 수 없어 포맷 검사를 건너뜁니다."
+    exit 0
+fi
+
+echo "Checking C# code formatting with dotnet format..."
+
+# 유니티 프로젝트 최상위의 .sln 파일 자동 탐색
+SLN_FILE=$(ls *.sln 2>/dev/null | head -n 1)
+
+if [ -z "$SLN_FILE" ]; then
+    echo "[Warning] .sln 파일을 찾을 수 없어 포맷 검사를 건너뜁니다."
+    exit 0
+fi
+
+# Assets/02.Scripts/ 내의 코드 스타일에 대해 dotnet format 적용 검사
+dotnet format "$SLN_FILE" --verify-no-changes --include Assets/02.Scripts/
+
+if [ $? -ne 0 ]; then
+    echo "\n[Git Hook Error] .editorconfig 코딩 컨벤션 위반이 발견되었습니다."
+    echo "Rider에서 'Reformat Code' 실행 또는 'dotnet format' 실행 후 다시 커밋해 주세요.\n"
+    exit 1
+fi

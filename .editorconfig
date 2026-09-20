@@ -1,0 +1,113 @@
+root = true
+
+# 게임 코드에만 적용한다. Unity가 생성하는 스크립트/외부 코드는 대상이 아니다.
+[Assets/02.Scripts/**.cs]
+
+#### 들여쓰기 / 포맷팅 ####
+
+indent_style = space
+indent_size = 4
+csharp_new_line_before_open_brace = all
+
+# 조기 리턴(단일 행)은 중괄호 없이 허용, 여러 줄일 때만 중괄호 강제
+csharp_prefer_braces = when_multiline:warning
+
+#### 코드 스타일 (MS Standard) ####
+
+# var 사용 규칙: 타입이 명확할 때만 var 사용 허용/권장
+csharp_style_var_for_built_in_types = false:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = false:warning
+
+# 시스템 타입 대신 C# 키워드 사용 선호 (Int32 대신 int, String 대신 string)
+dotnet_style_predefined_type_for_begins_with_type_name = true:warning
+dotnet_style_predefined_type_for_member_access = true:warning
+
+# this. 참조 생략 권장
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
+
+#### 이름 규칙 (Naming Styles) ####
+
+# 1. 스타일 정의
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+dotnet_naming_style.camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.interface_style.required_prefix = I
+dotnet_naming_style.interface_style.capitalization = pascal_case
+
+# 2. 규칙 순서: 구체적인 예외 규칙을 위에 작성해야 올바르게 동작합니다.
+
+# A. Private Const → PascalCase
+dotnet_naming_symbols.private_constants.applicable_kinds = field
+dotnet_naming_symbols.private_constants.applicable_accessibilities = private
+dotnet_naming_symbols.private_constants.required_modifiers = const
+dotnet_naming_rule.private_constants_pascal.symbols = private_constants
+dotnet_naming_rule.private_constants_pascal.style = pascal_case
+dotnet_naming_rule.private_constants_pascal.severity = warning
+
+# B. Private Static Readonly → PascalCase
+dotnet_naming_symbols.private_static_readonly.applicable_kinds = field
+dotnet_naming_symbols.private_static_readonly.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_readonly.required_modifiers = static, readonly
+dotnet_naming_rule.private_static_readonly_pascal.symbols = private_static_readonly
+dotnet_naming_rule.private_static_readonly_pascal.style = pascal_case
+dotnet_naming_rule.private_static_readonly_pascal.severity = warning
+
+# C. Private / Protected 필드 → _camelCase
+dotnet_naming_symbols.non_public_fields.applicable_kinds = field
+dotnet_naming_symbols.non_public_fields.applicable_accessibilities = private, protected
+dotnet_naming_rule.non_public_fields_underscore.symbols = non_public_fields
+dotnet_naming_rule.non_public_fields_underscore.style = underscore_camel_case
+dotnet_naming_rule.non_public_fields_underscore.severity = warning
+
+# D. Public / Internal 필드 → PascalCase
+dotnet_naming_symbols.public_fields.applicable_kinds = field
+dotnet_naming_symbols.public_fields.applicable_accessibilities = public, internal
+dotnet_naming_rule.public_fields_pascal.symbols = public_fields
+dotnet_naming_rule.public_fields_pascal.style = pascal_case
+dotnet_naming_rule.public_fields_pascal.severity = warning
+
+# E. 클래스, 구조체, 열거형, 델리게이트 → PascalCase
+dotnet_naming_symbols.types.applicable_kinds = class, struct, enum, delegate
+dotnet_naming_rule.types_pascal.symbols = types
+dotnet_naming_rule.types_pascal.style = pascal_case
+dotnet_naming_rule.types_pascal.severity = warning
+
+# F. 인터페이스 → IPascalCase
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_rule.interfaces_prefix.symbols = interfaces
+dotnet_naming_rule.interfaces_prefix.style = interface_style
+dotnet_naming_rule.interfaces_prefix.severity = warning
+
+# G. 메서드, 프로퍼티, 이벤트 → PascalCase
+dotnet_naming_symbols.methods_and_properties.applicable_kinds = method, property, event
+dotnet_naming_rule.methods_and_properties_pascal.symbols = methods_and_properties
+dotnet_naming_rule.methods_and_properties_pascal.style = pascal_case
+dotnet_naming_rule.methods_and_properties_pascal.severity = warning
+
+# H. 매개변수(Parameter) 및 지역변수(Local) → camelCase
+dotnet_naming_symbols.parameters_and_locals.applicable_kinds = parameter, local
+dotnet_naming_rule.parameters_and_locals_camel.symbols = parameters_and_locals
+dotnet_naming_rule.parameters_and_locals_camel.style = camel_case
+dotnet_naming_rule.parameters_and_locals_camel.severity = warning
+
+# UI_로 시작하는 파일 규칙
+[Assets/02.Scripts/**UI_*.cs]
+dotnet_naming_style.ui_pascal_case.required_prefix = UI_
+dotnet_naming_style.ui_pascal_case.capitalization = pascal_case
+
+dotnet_naming_symbols.ui_classes.applicable_kinds = class
+dotnet_naming_symbols.ui_classes.applicable_accessibilities = *
+
+dotnet_naming_rule.ui_classes_prefix.symbols = ui_classes
+dotnet_naming_rule.ui_classes_prefix.style = ui_pascal_case
+dotnet_naming_rule.ui_classes_prefix.severity = warning
+
+#### 진단 심각도 올리기 (빌드 및 dotnet format 용) ####
+
+dotnet_diagnostic.IDE1006.severity = warning # Naming Rule 위반
+dotnet_diagnostic.IDE0055.severity = warning # Formatting 위반

@@ -1,0 +1,26 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 1. 커밋 제목 형식 검사 (type: 설명)
+if ! head -n 1 "$1" | grep -qE '^(asset|design|build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(.+\))?!?: .+'; then
+    echo "\n[Git Hook Error] 커밋 메시지 제목은 'type: 설명' 또는 'type(scope): 설명' 형식이어야 합니다."
+    echo "허용 타입: asset, design, build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test\n"
+    exit 1
+fi
+
+# 2. 본문 줄 수 검사 (빈 줄 및 주석 제외 최소 1줄 이상)
+body_lines=$(awk '
+    NR > 1 && $0 !~ /^[[:space:]]*$/ && $0 !~ /^#/ {
+        count++
+    }
+    END {
+        print count + 0
+    }
+' "$1")
+
+if [ "$body_lines" -lt 1 ]; then
+    echo "\n[Git Hook Error] 커밋 메시지 본문은 빈 줄과 주석을 제외하고 최소 1줄 이상 작성해야 합니다.\n"
+    exit 1
+fi
+
+exit 0
